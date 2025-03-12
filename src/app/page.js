@@ -4,57 +4,15 @@ import { useState, useContext } from "react";
 
 import { AuthContext } from "@/context";
 
+import { useGetCorrections } from "@/hooks";
+
 // import { debounce } from "lodash";
-
-import OpenAI from "openai";
-
-import toast from "react-hot-toast";
-
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 export default function Home() {
   const { logout } = useContext(AuthContext);
+  const { loading, corrections, checkGrammar } = useGetCorrections();
 
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [corrections, setCorrections] = useState([]);
-
-  const checkGrammar = async () => {
-    setLoading(true);
-
-    try {
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-            { role: "system", content: "Find all grammatical mistakes in the given text and return a JSON array where each item contains { word: incorrect_word, suggestion: corrected_word }. Do not return any other text." },
-            {
-              role: "user",
-              content: text,
-            },
-        ],
-        store: true,
-      });
-
-      if (!response.choices || !response.choices[0]?.message?.content) {
-        toast.error("Error in open ai api")
-
-        return;
-      }
-
-      let corrections = [];
-      
-      corrections = JSON.parse(response.choices[0].message.content);
-
-      setCorrections(corrections);
-    } catch (error) {
-      toast.error(`${error}`);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // const debouncedCheckGrammar = useCallback(debounce(checkGrammar, 1000), []);
 
@@ -72,7 +30,7 @@ export default function Home() {
     return (
       <>
         {words.map((word, index) => {
-          const correction = corrections.find(c => c.word.toLowerCase() === word.toLowerCase());
+          const correction = corrections.find(correctionItem => correctionItem.word.toLowerCase() === word.toLowerCase());
 
           return correction ? (
               <span key={index} className="text-red-400 font-semibold">
@@ -111,7 +69,7 @@ export default function Home() {
           onChange={handleChange}
           placeholder="Type here..."
         />
-        <button onClick={checkGrammar} className="bg-white rounded-sm py-2 px-3 text-sm">{loading ? "Loading..." : "Check grammar"}</button>
+        <button onClick={() => checkGrammar(text)} className="bg-white rounded-sm py-2 px-3 text-sm">{loading ? "Loading..." : "Check grammar"}</button>
       </div>
     </div>
   );
