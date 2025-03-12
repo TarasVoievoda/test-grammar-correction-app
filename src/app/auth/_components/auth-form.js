@@ -7,6 +7,12 @@ import Link from "next/link";
 
 import toast from "react-hot-toast";
 
+
+/**
+ * @component
+ * @param {Object} props
+ * @param {"signIn" | "signUp"} props.authType
+ */
 export const AuthForm = ({ authType }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -45,7 +51,7 @@ export const AuthForm = ({ authType }) => {
     if (authType === "signIn") {
       if (formData.email === "" || formData.password === "") {
         toast.error("Some fields are empty");
-        
+
         return;
       }
 
@@ -57,7 +63,7 @@ export const AuthForm = ({ authType }) => {
     signIn: "Sign in",
     signUp: "Sign up",
   }
- 
+
   return (
     <div className="bg-white rounded-3xl shadow-lg p-8 w-[370px]">
       <h1 className="font-semibold text-xl">{formTitle[authType]}</h1>
@@ -84,7 +90,7 @@ export const AuthForm = ({ authType }) => {
               name="email"
               required
               value={formData.email}
-              onChange={handleInputChange} 
+              onChange={handleInputChange}
               className="bg-gray-100 py-2 px-3 rounded-lg"
               placeholder="Enter your email"
             />
@@ -92,7 +98,7 @@ export const AuthForm = ({ authType }) => {
 
           <div className="flex flex-col gap-1">
             <label>Password</label>
-            <input 
+            <input
               type="password"
               name="password"
               value={formData.password}
@@ -103,7 +109,7 @@ export const AuthForm = ({ authType }) => {
           </div>
         </div>
 
-        <button 
+        <button
           type="submit"
           disabled={isSignUpPending || isSignInPending}
           className="bg-gray-900 mt-3 text-white text-sm w-full p-2.5 rounded-lg cursor-pointer disabled:opacity-70"

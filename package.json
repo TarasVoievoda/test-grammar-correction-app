@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.2.3",
     "@prisma/client": "^6.5.0",
     "@tanstack/react-query": "^5.67.3",
+    "ai": "^4.1.56",
     "axios": "^1.8.2",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
@@ -27,6 +29,7 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.2.2",
+    "prisma": "^6.5.0",
     "tailwindcss": "^4"
   }
 }
