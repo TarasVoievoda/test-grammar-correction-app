@@ -16,8 +16,9 @@ export default function Home() {
 
   // const debouncedCheckGrammar = useCallback(debounce(checkGrammar, 1000), []);
 
-  const handleChange = (e) => {
-    const inputText = e.target.value;
+  const handleChange = (event) => {
+    const inputText = event.target.value;
+    
     setText(inputText);
     // debouncedCheckGrammar(inputText);
   };
