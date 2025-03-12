@@ -1,8 +1,19 @@
 import { generateObject, generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
+import RateLimitService from '../../../services/rate-limit.service';
+
+const rateLimiter = new RateLimitService(
+  50,
+  60 * 60 * 1000
+);
 
 export async function POST(req) {
+  const rateLimitResponse = rateLimiter.limit(req);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
   const { input } = await req.json();
 
   const { object: { corrections } } = await generateObject({
@@ -19,7 +30,7 @@ export async function POST(req) {
 
 
   if (!corrections) {
-    return Response.error("Error in OpenAI API", {
+    return Response.json({ message: "Error in OpenAI API" }, {
       status: 500
     });
   }

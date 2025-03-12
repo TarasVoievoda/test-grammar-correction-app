@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useCallback } from "react";
 
 import { AuthContext } from "@/context";
 
 import { useGetCorrections } from "@/hooks";
 
-// import { debounce } from "lodash";
+import { debounce } from "lodash";
 
 export default function Home() {
   const { logout } = useContext(AuthContext);
@@ -14,13 +14,14 @@ export default function Home() {
 
   const [text, setText] = useState("");
 
-  // const debouncedCheckGrammar = useCallback(debounce(checkGrammar, 1000), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedCheckGrammar = useCallback(debounce(checkGrammar, 1000), []);
 
   const handleChange = (event) => {
     const inputText = event.target.value;
-    
+
     setText(inputText);
-    // debouncedCheckGrammar(inputText);
+    debouncedCheckGrammar(inputText);
   };
 
   const highlightedText = () => {
@@ -34,13 +35,13 @@ export default function Home() {
           const correction = corrections.find(correctionItem => correctionItem.word.toLowerCase() === word.toLowerCase());
 
           return correction ? (
-              <span key={index} className="text-red-400 font-semibold">
-                {word} <span className="text-green-500 text-normal">({correction.suggestion})</span>{" "}
-              </span>
-            ) : (
-              word + " "
-            );
-          })
+            <span key={index} className="text-red-400 font-semibold">
+              {word} <span className="text-green-500 text-normal">({correction.suggestion})</span>{" "}
+            </span>
+          ) : (
+            word + " "
+          );
+        })
         }
       </>
     );

@@ -6,6 +6,11 @@ export const useGetCorrections = () => {
   const [loading, setLoading] = useState(false);
 
   const checkGrammar = async (text) => {
+    if (text === "") {
+      setCorrections([]);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -16,6 +21,11 @@ export const useGetCorrections = () => {
           "Content-Type": "application/json",
         },
       });
+
+      if (response.status !== 200) {
+        const error = await response.json();
+        throw new Error(error?.message ?? "Unknown error");
+      }
 
       const { corrections } = await response.json();
 
